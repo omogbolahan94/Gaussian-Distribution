@@ -1,23 +1,19 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from distribution import Distribution
+from generaldistribution import Distribution
 
 
 class GaussianDistribution(Distribution):
     """
     Gaussian distribution class for calculating
-    and visualizing Gaussian distribution:
-
-    Args:
-        mu (): the mean of the distribution. Default mean value is 1
+    and visualizing Gaussian distribution: the distribution. Default mean value is 1
         sigma (): the standard deviation of the distribution. Default value is 0
 
     Attributes:
         mean (): the mean value of the distribution
         stdev (): the standard deviation of the distribution
         data (list of float): list of float values extracted from the raw text file
-
 
     """
 
@@ -36,6 +32,15 @@ class GaussianDistribution(Distribution):
         """
         return f"mean: {round(self.mean, 2)} and standard deviation: {round(self.stdev, 2)}"
 
+    def __add__(self, other):
+        result = GaussianDistribution()
+
+        # calculate the mean and standard deviation of this new gaussian distribution
+        result.mean = self.mean + other.mean
+        result.stdev = np.sqrt(self.stdev ** 2 + other.stdev ** 2)
+
+        return result
+
     def calculate_mean(self):
         """Method to calculate the mean of the data set.
 
@@ -46,9 +51,7 @@ class GaussianDistribution(Distribution):
             float: mean of the data set
 
         """
-        if len(self.data) == 0:
-            return self.mean
-        avg = np.mean(self.data)
+        avg = 1.0 * np.mean(self.data)
         self.mean = avg
         return self.mean
 
@@ -63,8 +66,7 @@ class GaussianDistribution(Distribution):
             float: standard deviation of the data set
 
         """
-        if len(self.data) == 0:
-            return self.stdev
+
         if sample:
             n = len(self.data) - 1
         else:
@@ -77,17 +79,10 @@ class GaussianDistribution(Distribution):
             sigma_sqr += (x - mean) ** 2
 
         sigma_sqr = sigma_sqr / n
-        sigma = math.sqrt(sigma_sqr)
-        self.stdev = sigma
+        # sigma = round(np.sqrt(sigma_sqr), 2)
+        self.stdev = np.sqrt(sigma_sqr)
 
         return self.stdev
-
-    def __add__(self, other):
-        result = GaussianDistribution()
-        result.mean = self.mean + other.mean
-        result.stdev = np.sqrt(self.stdev ** 2 + other.stdev ** 2)
-
-        return result
 
     def plot_histogram(self):
         """Method to output a histogram of the instance variable data using

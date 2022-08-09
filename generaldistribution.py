@@ -38,5 +38,5 @@ class Distribution:
             # update the data attribute
             data_list = list(map(int, line.split('\n')))
 
-        # uppdate the data
+        # update the data
         self.data = data_list
